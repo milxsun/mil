@@ -455,6 +455,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .who p{margin:0 0 6px;font-size:15px;line-height:1.5;color:#ddd}
 .who input{width:100%;max-width:300px;height:54px;border-radius:27px;border:1px solid #fff5;background:#ffffff26;color:#fff;font:inherit;font-size:20px;text-align:center;outline:0}
 .who input::placeholder{color:#fff9}
+.who .whoerr{min-height:18px;font-size:14px;color:#ffb4ab}
 .who button{width:100%;max-width:300px;height:54px;border-radius:27px;background:#fff;color:#111;font:inherit;font-size:18px;font-weight:700}
 @media(prefers-reduced-motion:reduce){.screen,.toast,.dim{transition:none}.hint,.dots.shake,#phone.home .app{animation:none}}
 </style>
@@ -523,10 +524,24 @@ const CFG={
   now:null,              // 폰 속 시각 고정 예) '2026-09-13T19:00:00+09:00' / null 이면 실제 시각
   wallpaper:'wallpaper.png',        // 배경 사진 경로 예) 'wallpaper.jpg' (없으면 그라데이션)
   askName:true,          // true = 링크로 들어온 사람마다 이름을 직접 입력 / false = 이름을 묻지 않고 아래 defaultName 만 써요
+  askAge:true,           // true = 나이도 입력 / false = 나이를 묻지 않고 defaultAge 만 써요
   defaultName:'선우',    // 이름을 안 적었거나 askName:false 일 때 쓰는 이름
-  askTitle:'이름을 알려 주세요',   // 이름 입력 화면의 제목
-  askHint:'폰 주인으로 보여질 이름이에요. 성은 빼고 이름만 적어 주세요.',   // 이름 입력 화면의 안내 글
+  defaultAge:24,         // askAge:false 일 때(또는 링크에 age 가 없을 때) 쓰는 나이
+  minAge:19,             // askAge:true 일 때 이 나이 미만이면 시작할 수 없어요 (0 = 제한 없음)
+  minAgeMsg:'이 페이지는 만 19세 이상만 이용할 수 있어요.',   // 제한에 걸렸을 때 보여 주는 글
+  askTitle:'이름과 나이를 알려 주세요',   // 입력 화면의 제목
+  askHint:'폰 주인으로 보여질 이름이에요. 성은 빼고 이름만 적어 주세요.',   // 입력 화면의 안내 글
   title:'{이름}의 iPhone',        // 브라우저 탭 제목
+  // ▶ 나이 구간: 들어온 사람의 나이가 어느 구간인지에 따라 다른 대사가 나와요. 구간 이름(n)은 마음대로 바꿔도 돼요.
+  //    min~max = 그 구간의 나이 범위, call = {호칭} 자리에 들어갈 부르는 말
+  ageGroups:[
+    {n:'연하',min:20,max:23,call:'{이름아}'},    // 20~23살
+    {n:'동갑',min:24,max:24,call:'{이름}'},       // 24살
+    {n:'연상',min:25,max:99,call:'{이름}씨'}],    // 25살 이상 (범위를 벗어난 나이는 가장 가까운 구간으로 처리돼요)
+  // ▶ 나이별 대사 쓰는 법: 대사 자리에 구간 이름을 그대로 쓴 { } 를 넣으면 돼요.
+  //    한 줄만 다르게:  ['them',{연하:'응 {이름아}',동갑:'응 {이름}',연상:'네 {이름}씨'},'오후 9:05']
+  //    대사 묶음 통째로: lines:{연하:['여보세요?','…'],동갑:['…'],연상:['…']}      (안 적은 구간은 '기본' 이나 첫 구간 대사로 나와요)
+  //    {호칭} = 구간마다 위에서 정한 부르는 말 / {나이} = 입력한 나이
   // ▶ 대사나 이름 자리에 {이름} 을 쓰면 들어온 사람의 이름으로 바뀌어요. 뒤에 붙는 말(조사)은 받침에 맞춰 자동으로 골라 줘요.
   //    {이름}=이름 그대로 / {이름아}=민준아·서아야 / {이름이}=민준이·서아가 / {이름은}=민준은·서아는 / {이름을}=민준을·서아를 / {이름과}=민준과·서아와 / {이름이랑}=민준이랑·서아랑
   //    링크 뒤에 ?name=민준 을 붙이면 이름을 묻지 않고 그 이름으로 바로 시작해요.
@@ -747,7 +762,7 @@ const CFG={
     dms:[
       {u:'leejaehyunow',t:'3시간',unread:1,msgs:[['sep','8월 8일 오후 9:21'],['them','잘 나왔네 ㅋㅋ'],['me','좋아요 눌러 !!'],['them','이미 눌렀어 ㅋㅋ'],['me','ㅎㅎ'],['sep','오늘 오전 9:40'],['them','주말에 시간 돼?']],
        reply:{rules:[{k:'안녕|하이',say:['어 안녕~','뭐해?']},{k:'주말|시간|언제',say:['토요일 어때?','오후 2시쯤 괜찮아?']}],else:['ㅋㅋㅋ','그치?','응응']}},
-      {u:'_0hoony',t:'1일',msgs:[['sep','어제 오후 6:10'],['them','촬영 고생 많았어요!'],['me','감사합니다 ㅎㅎ']],
+      {u:'_0hoony',t:'1일',msgs:[['sep','어제 오후 6:10'],['them',{연하:'촬영 고생 많았어! 푹 쉬어',동갑:'촬영 고생 많았어 ㅎㅎ',연상:'촬영 고생 많으셨어요!'}],['me','감사합니다 ㅎㅎ']],
        reply:{else:['넵~','다음에 또 봬요']}},
       {u:'mina_0214',t:'2일',msgs:[['sep','10월 17일 오후 8:02'],['me','사진 잘 봤어요'],['them','헉 감사해요!!']],reply:{else:['ㅎㅎ 감사해요']}},
       {u:'cafe.log',t:'1주',msgs:[['sep','10월 12일 오전 11:30'],['them','안녕하세요, 카페 협업 문의드려요 :)']],reply:{else:['확인 부탁드려요 😊']}}]
@@ -1296,36 +1311,52 @@ document.addEventListener('keydown',e=>{
   if(!c.contains('pass'))return;
   if(/^\d$/.test(e.key))press(e.key);else if(e.key==='Backspace')setPin(pin.slice(0,-1));else if(e.key==='Escape')closePass()});
 
-/* ===== 이름 입력 / {이름} 바꾸기 ===== */
+/* ===== 이름·나이 입력 / {이름} 바꾸기 / 나이별 대사 고르기 ===== */
 const jong=n=>{const c=String(n||'').trim().slice(-1).charCodeAt(0)-0xAC00;return c>=0&&c<11172?c%28:0};      // 받침 (0 = 받침 없음 / 한글 아님)
-const NJ={'':[0,0],'아':['아','야'],'이':['이','가'],'은':['은','는'],'을':['을','를'],'과':['과','와'],'이랑':['이랑','랑']};
-let VNAME=CFG.defaultName||'';
-const fillName=t=>String(t).replace(/\{이름(아|이|은|을|과|이랑)?\}/g,(m,j)=>j?VNAME+NJ[j][jong(VNAME)>0?0:1]:VNAME);
+const NJ={'아':['아','야'],'이':['이','가'],'은':['은','는'],'을':['을','를'],'과':['과','와'],'이랑':['이랑','랑']};
+let VNAME=CFG.defaultName||'',VAGE=+CFG.defaultAge||24,VGROUP='',VCALL='{이름}';
+const fillRaw=t=>String(t).replace(/\{이름(아|이|은|을|과|이랑)?\}/g,(m,j)=>j?VNAME+NJ[j][jong(VNAME)>0?0:1]:VNAME);
+const fillName=t=>fillRaw(String(t).replace(/\{호칭\}/g,VCALL).replace(/\{나이\}/g,VAGE));
+const AGS=CFG.ageGroups||[],AGN=new Set(AGS.map(g=>g.n).concat('기본'));
+function groupOf(age){if(!AGS.length)return null;
+  const f=AGS.find(g=>age>=(g.min==null?0:g.min)&&age<=(g.max==null?999:g.max));if(f)return f;
+  const sorted=[...AGS].sort((a,b)=>(a.min||0)-(b.min||0));return age<(sorted[0].min||0)?sorted[0]:sorted[sorted.length-1]}
+/* {연하:…,동갑:…,연상:…} 처럼 구간 이름만 키로 가진 객체는, 입력한 나이의 구간 값 하나로 바뀜 */
+function pickVariant(o){if(VGROUP in o)return o[VGROUP];if('기본' in o)return o['기본'];const k=AGS.map(g=>g.n).find(n=>n in o);return o[k!=null?k:Object.keys(o)[0]]}
 function personalize(o){
   if(typeof o==='string')return fillName(o);
   if(Array.isArray(o)){for(let i=0;i<o.length;i++)o[i]=personalize(o[i]);return o}
-  if(o&&typeof o==='object'){for(const k in o)o[k]=personalize(o[k]);return o}
+  if(o&&typeof o==='object'){const ks=Object.keys(o);
+    if(ks.length&&ks.every(k=>AGN.has(k)))return personalize(pickVariant(o));
+    for(const k of ks)o[k]=personalize(o[k]);return o}
   return o}
-function applyName(n){
+function applyWho(n,a){
   VNAME=(String(n||'').trim().slice(0,12))||CFG.defaultName||'나';
-  personalize(CFG);personalize(TR);                       // 설정과 최근 통화 목록 안의 {이름} 을 모두 바꿈
+  let age=parseInt(String(a==null?'':a).replace(/\D/g,''),10);if(!(age>=1&&age<=99))age=+CFG.defaultAge||24;
+  VAGE=age;const g=groupOf(age);VGROUP=g?g.n:'';VCALL=(g&&g.call)||'{이름}';
+  personalize(CFG);personalize(TR);                       // 설정과 최근 통화 목록 안의 {이름}·{호칭}·나이별 대사를 한 번에 바꿈
   document.title=fillName(CFG.title||'iPhone');
-  try{sessionStorage.setItem('phone-name',VNAME)}catch(e){}
+  try{sessionStorage.setItem('phone-name',VNAME);sessionStorage.setItem('phone-age',String(age))}catch(e){}
   $('#who').classList.remove('on')}
 (function(){
-  let q=null,sv=null;
-  try{q=new URLSearchParams(location.search).get('name')}catch(e){}
-  try{sv=sessionStorage.getItem('phone-name')}catch(e){}
-  if(!CFG.askName){applyName(CFG.defaultName);return}
-  if(q&&q.trim()){applyName(q);return}
-  if(sv){applyName(sv);return}
+  let q=null,qa=null,sv=null,sa=null;
+  try{const u=new URLSearchParams(location.search);q=u.get('name');qa=u.get('age')}catch(e){}
+  try{sv=sessionStorage.getItem('phone-name');sa=sessionStorage.getItem('phone-age')}catch(e){}
+  const an=CFG.askName!==false,aa=CFG.askAge!==false;
+  if(!an&&!aa){applyWho(CFG.defaultName,CFG.defaultAge);return}
+  const young=a=>aa&&CFG.minAge>0&&a>=1&&a<CFG.minAge;
+  const block=()=>{const w=$('#who');w.innerHTML=`<h2>${kesc(CFG.minAgeMsg||'이용할 수 없어요.')}</h2>`;w.classList.add('on')};
+  if((q&&q.trim())||(qa&&qa.trim())){if(young(parseInt(String(qa||'').replace(/\D/g,''),10))){block();return}applyWho(q||(an?'':CFG.defaultName),qa);return}      // 링크에 ?name=민준&age=22 처럼 적은 경우
+  if(sv||sa){applyWho(sv,sa);return}
   const w=$('#who');
-  w.innerHTML=`<h2>${kesc(CFG.askTitle||'이름을 알려 주세요')}</h2><p>${kesc(CFG.askHint||'')}</p><input id="whoin" maxlength="12" placeholder="이름" autocomplete="off" enterkeyhint="go" aria-label="이름"><button id="whogo">시작하기</button>`;
+  w.innerHTML=`<h2>${kesc(CFG.askTitle||'이름을 알려 주세요')}</h2><p>${kesc(CFG.askHint||'')}</p>${an?'<input id="whoin" maxlength="12" placeholder="이름" autocomplete="off" aria-label="이름">':''}${aa?'<input id="whoage" maxlength="2" placeholder="나이" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="나이">':''}<div class="whoerr" id="whoerr"></div><button id="whogo">시작하기</button>`;
   w.classList.add('on');
-  const go=()=>applyName($('#whoin').value);
+  const go=()=>{let a=CFG.defaultAge;
+    if(aa){a=parseInt(String($('#whoage').value).replace(/\D/g,''),10);if(!(a>=1&&a<=99)){$('#whoerr').textContent='나이를 숫자로 적어 주세요.';return}if(young(a)){block();return}}
+    applyWho(an?$('#whoin').value:CFG.defaultName,a)};
   $('#whogo').addEventListener('click',go);
-  $('#whoin').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();go()}});
-  setTimeout(()=>{try{$('#whoin').focus()}catch(e){}},300)})();
+  [an&&'#whoin',aa&&'#whoage'].filter(Boolean).forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();go()}}));
+  setTimeout(()=>{try{$(an?'#whoin':'#whoage').focus()}catch(e){}},300)})();
 </script>
 </body>
 </html>
