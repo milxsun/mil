@@ -7,7 +7,7 @@
 <style>
 :root{--w:402px;--glass:rgba(255,255,255,.16);--edge:rgba(255,255,255,.34)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0}
+html,body{height:100%;margin:0;overscroll-behavior:none}
 body{background:#08090c;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Pretendard","Noto Sans KR",Roboto,sans-serif;color:#fff;overflow:hidden}
 button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;user-select:none}
 button:focus-visible{outline:2px solid #fff;outline-offset:3px}
@@ -457,6 +457,30 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .who input::placeholder{color:#fff9}
 .who .whoerr{min-height:18px;font-size:14px;color:#ffb4ab}
 .who button{width:100%;max-width:300px;height:54px;border-radius:27px;background:#fff;color:#111;font:inherit;font-size:18px;font-weight:700}
+.island{pointer-events:none}
+.lnl{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 246px);display:flex;flex-direction:column;gap:8px;cursor:default}
+.ncd{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;border-radius:22px;background:#ffffff33;backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid #ffffff40;color:#fff;text-align:left;width:100%;box-shadow:0 6px 20px #0002;animation:ncin .45s cubic-bezier(.32,.72,0,1) both}
+@keyframes ncin{from{opacity:0;transform:translateY(-14px) scale(.97)}}
+.ncd .ic2{width:38px;height:38px;border-radius:9px;overflow:hidden;flex:none;display:flex}
+.ncd .ic2 svg{width:100%;height:100%}
+.ncd .tx{flex:1;min-width:0}
+.ncd b{display:block;font-size:15px}
+.ncd p{margin:2px 0 0;font-size:14.5px;line-height:1.3;opacity:.92;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ncd small{font-size:12px;opacity:.75;white-space:nowrap}
+.lnmore{align-self:center;padding:5px 14px;border-radius:14px;background:#ffffff2e;font-size:13px;color:#fff}
+.nchit{position:absolute;z-index:32;top:0;left:0;right:0;height:calc(env(safe-area-inset-top,0px) + 46px);touch-action:none;display:none}
+#phone.home:not(.ncopen) .nchit{display:block}
+.nc{position:absolute;inset:0;z-index:24;display:none;flex-direction:column;align-items:center;color:#fff;background:#000a;backdrop-filter:blur(34px) saturate(160%);-webkit-backdrop-filter:blur(34px) saturate(160%);padding:calc(env(safe-area-inset-top,0px) + 64px) 14px 0;text-align:center}
+.nc.on{display:flex;animation:ncdown .4s cubic-bezier(.32,.72,0,1)}
+@keyframes ncdown{from{transform:translateY(-100%)}}
+.nct{font-size:64px;font-weight:700;line-height:1;font-family:ui-rounded,"Nunito",-apple-system,sans-serif;letter-spacing:-2px}
+.ncdt{font-size:17px;opacity:.85;margin-top:6px}
+.nch{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:22px;font-size:20px;font-weight:700;padding:0 4px}
+.ncx{width:30px;height:30px;border-radius:50%;background:#ffffff40;color:#fff;font-size:14px}
+.ncl{flex:1;width:100%;overflow-y:auto;margin-top:10px;display:flex;flex-direction:column;gap:8px;padding-bottom:120px;scrollbar-width:none;min-height:0}
+.nce{margin-top:50px;font-size:17px;opacity:.7}
+.ncc{position:absolute;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 84px);touch-action:none}
+.nc .cbar{border:0;padding:0}
 @media(prefers-reduced-motion:reduce){.screen,.toast,.dim{transition:none}.hint,.dots.shake,#phone.home .app{animation:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -477,6 +501,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <section class="screen lock" id="lock" aria-label="잠금화면">
     <div class="date" id="date"></div>
     <div class="time" id="time"></div>
+    <div class="lnl" id="lnl"></div>
     <div class="hint">위로 쓸어올려 열기</div>
     <div class="quick">
       <span class="glass" aria-label="손전등"><svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path fill-rule="evenodd" d="M7 2.5A.5.5 0 0 1 7.5 2h9a.5.5 0 0 1 .5.5v3.7c0 .5-.2 1-.6 1.4L15 9v11.2a1.8 1.8 0 0 1-1.8 1.8h-2.4A1.8 1.8 0 0 1 9 20.2V9L7.6 7.6A2 2 0 0 1 7 6.2zM10.8 12.7a1.2 1.2 0 0 1 2.4 0v1.6a1.2 1.2 0 0 1-2.4 0z"/></svg></span>
@@ -500,7 +525,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     
   </section>
   <section class="screen appv" id="appv" aria-label="앱 화면"><div class="appc" id="appc"></div><div class="kk" id="kk"></div><div class="ph" id="ph"></div><div class="pv" id="pv"></div><div class="pp" id="pp"></div><div class="ms" id="ms"></div><div class="ig" id="ig"></div><div class="nt" id="nt"></div><button class="bar" id="closeapp" aria-label="홈으로 돌아가기"></button></section>
-  <div class="who" id="who"></div><div class="tcall" id="tcall"></div><div class="nb glass" id="nb" role="alert"></div>
+  <div class="nc" id="nc"></div><div class="nchit" id="nchit"></div><div class="who" id="who"></div><div class="tcall" id="tcall"></div><div class="nb glass" id="nb" role="alert"></div>
   <div class="toast glass" id="toast" role="status"></div>
 </main>
 
@@ -531,6 +556,7 @@ const CFG={
   minAgeMsg:'이 페이지는 만 19세 이상만 이용할 수 있어요.',   // 제한에 걸렸을 때 보여 주는 글
   askTitle:'이름과 나이를 알려 주세요',   // 입력 화면의 제목
   askHint:'폰 주인으로 보여질 이름이에요. 성은 빼고 이름만 적어 주세요.',   // 입력 화면의 안내 글
+  notifyStart:'open',    // 'open' = 이름·나이를 입력하고 폰이 열리자마자부터 알림 시간이 흘러가요(잠금화면에도 알림이 쌓여요) / 'unlock' = 비밀번호를 푼 뒤부터
   title:'{이름}의 iPhone',        // 브라우저 탭 제목
   // ▶ 나이 구간: 들어온 사람의 나이가 어느 구간인지에 따라 다른 대사가 나와요. 구간 이름(n)은 마음대로 바꿔도 돼요.
   //    min~max = 그 구간의 나이 범위, call = {호칭} 자리에 들어갈 부르는 말
@@ -538,6 +564,16 @@ const CFG={
     {n:'연하',min:20,max:23,call:'{이름아}'},    // 20~23살
     {n:'동갑',min:24,max:24,call:'{이름}'},       // 24살
     {n:'연상',min:25,max:99,call:'{이름}씨'}],    // 25살 이상 (범위를 벗어난 나이는 가장 가까운 구간으로 처리돼요)
+  // ▶ 사람 이름(호칭)을 나이 구간마다 다르게: 저장된 이름(카톡, 전화, 문자, 알림)과 인스타 이름, 대사 속 이름이 모두 같이 바뀌어요.
+  //    대사나 이름 자리에 {재현} 처럼 적으면 아래 표에서 구간에 맞는 이름으로 바뀌고, 뒤에 붙는 말(이/가, 은/는, 을/를, 랑)도 받침에 맞춰 골라 줘요.
+  //    새 사람을 더하려면 아래에 한 줄을 추가하고 대사에는 {키} 로 쓰세요. 구간 이름은 위 ageGroups 의 n 과 같아야 해요. 문자열 하나만 적으면 모든 나이에 같은 이름이에요.
+  people:{
+    '재현':{연하:'재현이 오빠',동갑:'이재현',연상:'재현이'},
+    '영훈':{연하:'영훈이 오빠',동갑:'김영훈',연상:'영훈이'},
+    '영재':{연하:'영재 오빠',동갑:'손영재',연상:'영재'},
+    '주연':{연하:'주연이 오빠',동갑:'주연',연상:'주연이'},     // 성을 알면 동갑 칸에 풀네임을 적어 주세요 (예: 박주연)
+    '창민':{연하:'창민이 오빠',동갑:'창민',연상:'창민이'},     // 성을 알면 동갑 칸에 풀네임을 적어 주세요
+    '매니저':'매니저님'},
   // ▶ 나이별 대사 쓰는 법: 대사 자리에 구간 이름을 그대로 쓴 { } 를 넣으면 돼요.
   //    한 줄만 다르게:  ['them',{연하:'응 {이름아}',동갑:'응 {이름}',연상:'네 {이름}씨'},'오후 9:05']
   //    대사 묶음 통째로: lines:{연하:['여보세요?','…'],동갑:['…'],연상:['…']}      (안 적은 구간은 '기본' 이나 첫 구간 대사로 나와요)
@@ -561,13 +597,13 @@ const CFG={
     gap:2000,              // 답장이 여러 줄일 때 줄 사이 간격
     me:{n:'{이름}',st:'연락 X',c:'#9ec5d8',e:'sunwoo_pro.jpg'},      // 사진은 e:'sunwoo_pro.jpg'
     friends:[              // st=상태메시지, c=기본 프로필 배경색, e=프로필 사진
-      {n:'재현이 형',st:'구리',c:'#9ec5d8',e:'lee_pro.jpg'},{n:'영훈이 형',st:'',c:'#d9b99b',e:'young_pro.jpg'},{n:'손영재',st:'바쁘다 바빠',c:'#a8cfa0',e:'eric_pro.jpg'},
-      {n:'주연이 형',st:'',c:'#d8a0b5',e:'juyeon_pro.jpg'},{n:'창민이 형',st:'🎧',c:'#b8a8d8',e:'q_pro.jpg'},{n:'매니저님',st:'문의는 카톡으로',c:'#8fb6cc'}],
+      {n:'{재현}',st:'구리',c:'#9ec5d8',e:'lee_pro.jpg'},{n:'{영훈}',st:'',c:'#d9b99b',e:'young_pro.jpg'},{n:'{영재}',st:'바쁘다 바빠',c:'#a8cfa0',e:'eric_pro.jpg'},
+      {n:'{주연}',st:'',c:'#d8a0b5',e:'juyeon_pro.jpg'},{n:'{창민}',st:'🎧',c:'#b8a8d8',e:'q_pro.jpg'},{n:'{매니저}',st:'문의는 카톡으로',c:'#8fb6cc'}],
     // ★ 답장 설정: 대화방마다 reply 를 적으면 내가 보낸 말에 상대가 답장해요
     //   rules = [{k:'단어1|단어2', say:['답장1','답장2']}]  → 내가 보낸 말에 k 단어가 들어 있으면 say 를 한 줄씩 보냄 (위에서부터 먼저 맞는 것만)
     //   else  = 어느 규칙에도 안 맞을 때 차례대로 하나씩 보내는 답장
     chats:[                // p=미리보기, t=시간, u=안 읽은 수, msgs=[['them'|'me', 내용, 시각, 안읽음(1)], ['sep','날짜']]
-      {n:'재현이 형',p:'웅 일 끝나면 전화해',t:'오전 9:12',u:0,c:'#9ec5d8',reply:{rules:[
+      {n:'{재현}',p:'웅 일 끝나면 전화해',t:'오전 9:12',u:0,c:'#9ec5d8',reply:{rules:[
         {k:'보고',say:['형이 지금 갈까?','지금 어딘데?']},
         {k:'형',say:['응 {이름아}','왜?']},
         {k:'사랑',say:['어제는 부끄러워하더니 ㅋㅋ','내가 더 사랑해 {이름아}']},
@@ -618,31 +654,31 @@ const CFG={
         ['sep','2025년 5월 13일 화요일'],
         ['me','형 여자친구 생겼어요?','오후 7:35'],['me','다른 형들이 형 학교 앞에서 예쁜 여성분이랑 웃으면서 팔짱 끼고 가는 거 봤다길래요','오후 7:36'],['me','바쁠 것 같아서 고민했는데','오후 7:35'],['them','아니아니 무슨 소리야?','오후 7:35'],['them','형 여자친구 없는데','오후 7:35'],['me','그러면 뭐 썸타는 사람?','오후 7:35'],
         ['them','아 ㅋㅋㅋㅋ 무슨 소리인가 했네','오후 7:35'],['them','형 옆에 있던 사람 예쁘대?','오후 7:35'],['me','네 미인이라고 형이 완전 푹 빠진 것 같다던데','오후 7:35'],['them','ㅋㅋㅋㅋㅋㅋㅋㅋ','오후 7:35'],['them','형 친누나야','오후 7:35'],['them','여자친구는 무슨 너 볼 시간도 없는데','오후 7:35'],['them','형 다음 달이면 바쁜 거 거의 끝날 거야','오후 7:35'],
-        ['me','아... 아니 창민이 형이 형 여자친구 생긴 거 아니냐고 해서 아 ㅡㅡ','오후 7:35'],['them','ㅋㅋㅋㅋ 바보','오후 7:35'],
+        ['me','아... 아니 {창민}이 형 여자친구 생긴 거 아니냐고 해서 아 ㅡㅡ','오후 7:35'],['them','ㅋㅋㅋㅋ 바보','오후 7:35'],
         ['sep','2025년 6월 9일 월요일'],
         ['them','{이름아} 형 취업 성공했어','오후 4:10'],['them','오늘 저녁에 볼래?','오후 4:11'],['them','형이 맛있는 거 사 줄게','오후 4:11'],['me','좋아요','오후 4:17'],['them','그래 ㅋㅋㅋㅋ','오후 4:18'],['them','형이 6시까지 데리러 갈게 준비하고 있어','오후 4:18'],
         ['sep','2026년 10월 23일 금요일'],['them','일어났어?','오전 9:05'],['me','밥도 해 놓고 갔네','오전 9:08'],['me','역시 최고의 신랑감 ㅎㅎ','오전 9:08'],['them','ㅋㅋㅋㅋㅋ 빈말은','오전 9:09'],
         ['them','우리 크리스마스에 여행 가는 거 잊지 마','오전 9:10'],['them','미리 예매 다 했어','오전 9:11'],['them','이번에도 늦게 자서 피곤하다고 비척거리지 말고','오전 9:12'],['me','아 형 알겠다고 그만 말해','오전 9:13'],['me','절대 안 그래 걱정 마','오전 9:14'],['them','ㅋㅋㅋ 알겠어','오전 9:17'],['them','저녁에 치맥 하러 나갈까?','오전 9:18'],['me','웅 좋아 일 끝나면 전화해','오전 9:19']]},
-      {n:'매니저님',p:'스케줄표 보내드렸어요 확인 부탁드려요!',t:'오전 8:40',u:1,c:'#8fb6cc',reply:{rules:[
+      {n:'{매니저}',p:'스케줄표 보내드렸어요 확인 부탁드려요!',t:'오전 8:40',u:1,c:'#8fb6cc',reply:{rules:[
         {k:'일정|스케줄',say:['네 확인했습니다!','수정할 부분 있으면 말씀해 주세요 :)']},
         {k:'감사|고마워',say:['아니에요 😊']}],
         else:['넵 확인했습니다!','네네~']},msgs:[
         ['sep','2026년 10월 18일 일요일'],['them','안녕하세요! 다음 주 일정 공유 드려요','오전 8:38'],
         ['them','스케줄표 보내드렸어요 확인 부탁드려요!','오전 8:40']]},
-      {n:'손영재',p:'학교 앞 포차 ㄱㄱ',t:'10월 16일',u:0,c:'#d9b99b',reply:{rules:[
+      {n:'{영재}',p:'학교 앞 포차 ㄱㄱ',t:'10월 16일',u:0,c:'#d9b99b',reply:{rules:[
         {k:'치킨|밥|먹',say:['ㅇㅋ','7시에 거기서 보자']},
         {k:'ㅋㅋ',say:['ㅋㅋㅋㅋㅋ']}],
         else:['ㅇㅇ','ㅋㅋ','알겠어']},msgs:[
         ['sep','2026년 10월 16일 토요일'],['me','저녁에 맥주 드실?','오후 5:20'],['them','치킨?','오후 5:22'],
         ['me','ㅇㅋ 7시에 보자','오후 5:23'],['them','학교 앞 포차 ㄱㄱ','오후 5:24',0]]},
-      {n:'영훈이 형',p:'그래~ 오면 본가 잠깐 다녀오자',t:'10월 3일',u:0,c:'#d8a0b5',reply:{rules:[
+      {n:'{영훈}',p:'그래~ 오면 본가 잠깐 다녀오자',t:'10월 3일',u:0,c:'#d8a0b5',reply:{rules:[
         {k:'사랑',say:['형도 {이름} 사랑하지~']}],
         else:['ㅎㅎ','웅','그치?']},msgs:[
         ['sep','2026년 10월 3일 토요일'],['them','아주 거기서 살아라 ㅡㅡ','오후 1:02'],['me','형도 맨날 집에 안 들어오면서','오후 1:05'],
-        ['them','어쭈? 말대꾸?','오후 1:20'],['them','아예 짐도 싹 옮기지 그래?','오후 1:21'],['me','이재현네에 내 짐이 더 많은 듯 ㅎㅎ','오후 1:23'],['them','ㅡㅡ... 알겠어','오후 1:24'],['them','재현이한테 맨날 맛있는 거 사 달라고 해','오후 1:24'],['me','웅 나 다음 주에는 집 갈 듯','오후 1:25'],['them','그래~ 오면 본가 잠깐 다녀오자','오후 1:26']]},
-      {n:'창민이 형',p:'ㅇㅋㅇㅋ',t:'10월 3일',u:0,c:'#a8cfa0',reply:{else:['ㅇㅋ','ㅇㅇ']},msgs:[
+        ['them','어쭈? 말대꾸?','오후 1:20'],['them','아예 짐도 싹 옮기지 그래?','오후 1:21'],['me','{재현}네에 내 짐이 더 많은 듯 ㅎㅎ','오후 1:23'],['them','ㅡㅡ... 알겠어','오후 1:24'],['them','재현이한테 맨날 맛있는 거 사 달라고 해','오후 1:24'],['me','웅 나 다음 주에는 집 갈 듯','오후 1:25'],['them','그래~ 오면 본가 잠깐 다녀오자','오후 1:26']]},
+      {n:'{창민}',p:'ㅇㅋㅇㅋ',t:'10월 3일',u:0,c:'#a8cfa0',reply:{else:['ㅇㅋ','ㅇㅇ']},msgs:[
         ['sep','2025년 5월 13일 화요일'],
-        ['them','야 {이름아} 재현이 형 여자친구 생겼어?','오후 7:35'],['me','네? 갑자기 왜요','오후 7:36'],['them','아니 아까 정문 앞에서','오후 7:35'],['them','재현이 형 대박 미인이신 분이랑 다정하게 팔짱 끼고 나가던데?','오후 7:35'],['me','어... 저는 잘 몰라요','오후 7:36'],['them','아 그래? 너는 알 것 같아서 물어봤어','오후 7:36'],
+        ['them','야 {이름아} {재현} 여자친구 생겼어?','오후 7:35'],['me','네? 갑자기 왜요','오후 7:36'],['them','아니 아까 정문 앞에서','오후 7:35'],['them','{재현} 대박 미인이신 분이랑 다정하게 팔짱 끼고 나가던데?','오후 7:35'],['me','어... 저는 잘 몰라요','오후 7:36'],['them','아 그래? 너는 알 것 같아서 물어봤어','오후 7:36'],
         ['them','알겠어~ 쉬어','오후 7:36'],
         ['sep','2026년 10월 3일 토요일'],['them','내일 풋살 가능?','오후 8:11'],['me','가능 ㅇㅇ','오후 8:15'],['them','ㅇㅋㅇㅋ','오후 8:16']]}]
   }
@@ -672,63 +708,73 @@ const CFG={
     //   keypad  = 키패드로 번호를 눌러 걸었을 때   (연락처에 저장된 전화번호와 똑같이 눌러야 해요)
     //   contact = 연락처에서 걸었을 때 (안 적으면 keypad 대사를 써요)
     contacts:[
-      {n:'재현이 형',num:'010-0913-1997',fav:1,lines:{
+      {n:'{재현}',num:'010-0913-1997',fav:1,lines:{
         recent:['응 {이름아}','형 도착했는데','괜찮아 천천히 내려와','... 30분?','형이 올라갈게'],
         keypad:['여보세요?','집 앞이야','놀이터쪽 봐','ㅋㅋㅋㅋ 예쁘지?','너 주려고 샀어','빨리 내려와서 안겨'],
         contact:['응 {이름아}','사랑한다고?','뭐야 어색하게','아니 ㅋㅋㅋㅋ','형도 사랑해']}},
-      {n:'영훈이 형',num:'010-0808-1997',lines:{
+      {n:'{영훈}',num:'010-0808-1997',lines:{
         recent:['웅 {이름아}','잠깐만 형 지금 운전 중이야','도착하면 연락할게'],
         keypad:['여보세요','형 지금 재현이랑 얘기하고 있어','응 알겠어','끊어']}},
-      {n:'손영재',num:'010-1222-2000',lines:{
+      {n:'{영재}',num:'010-1222-2000',lines:{
         recent:['오 웬일이야','나 지금 바빠서 나중에 전화할게'],
         keypad:['여보세요?','엉 {이름}~','대리 출석 좀 오반데','ㅇㅋ 나중에 삼겹살 사라']}},
-      {n:'주연이 형',num:'010-0115-1998',fav:1,lines:{
+      {n:'{주연}',num:'010-0115-1998',fav:1,lines:{
         recent:['엏 여보세여','{이름아} 잘 안 들려','형 지금 창민이랑 있으니까','어엏 이따 다시 전화할게'],
         keypad:['{이름} 왜?','형 지금 데이트 중','비밀이얗','카톡 할게']}},
-      {n:'창민이 형',num:'010-1105-1998',lines:{
+      {n:'{창민}',num:'010-1105-1998',lines:{
         recent:['{이름아} 왜?','오늘 못 온다고?', '알겠어 푹 쉬어'],
-        keypad:['여보세요','어 {이름아} 왜?','재현이 형이랑 만난다고?','어... 알고 있었는데','그렇게 티내면서...','뭐 어때~','이거 말하려고 전화한 거야?','응응 다음 주에는 꼭 나오고!']}},
-      {n:'매니저님',num:'010-1206-2017',lines:{
+        keypad:['여보세요','어 {이름아} 왜?','{재현}이랑 만난다고?','어... 알고 있었는데','그렇게 티내면서...','뭐 어때~','이거 말하려고 전화한 거야?','응응 다음 주에는 꼭 나오고!']}},
+      {n:'{매니저}',num:'010-1206-2017',lines:{
         recent:['네 안녕하세요','지금 회의 중이라 이따 연락드릴게요'],
         keypad:['여보세요, 안녕하세요','어느 분이실까요?','아 네 확인했습니다']}}],
     // 최근 통화 목록: n=이름(또는 번호), k=in(받은 전화)/out(건 전화)/miss(부재중), t=표시할 시간, cnt=연속 횟수, tag=이름 아래 글자
     recents:[
-      {n:'재현이 형',k:'out',t:'11:41',cnt:2},
+      {n:'{재현}',k:'out',t:'11:41',cnt:2},
       {n:'070-0000-3158',k:'in',t:'11:02',tag:'<스팸의심>',red:1},
-      {n:'창민이 형',k:'in',t:'10:37'},
-      {n:'매니저님',k:'miss',t:'09:58'},
-      {n:'손영재',k:'in',t:'09:12'},
-      {n:'주연이 형',k:'in',t:'08:50'}]
+      {n:'{창민}',k:'in',t:'10:37'},
+      {n:'{매니저}',k:'miss',t:'09:58'},
+      {n:'{영재}',k:'in',t:'09:12'},
+      {n:'{주연}',k:'in',t:'08:50'}]
   }
   ,sms:{                 // ── 문자(아이메시지) 내용 (여기만 고치면 됩니다) ──
     // n=이름, t=목록 오른쪽 시간, u:1=안 읽음(파란 점), pin:1=맨 위 동그라미로 고정, e=사진(안 적으면 연락처/카톡 사진 자동)
     // msgs = [['sep','날짜 글자'], ['them','받은 말'], ['me','내가 보낸 말']]   p='목록 미리보기'(안 적으면 마지막 말)
     threads:[
-      {n:'주연이 형',t:'09:12',msgs:[
+      {n:'{주연}',t:'09:12',msgs:[
         ['sep','2026년 10월 18일 일요일 09:05'],['them','{이름아} 뭐 해?'],['me','동아리에서 풋살 중'],['them','창민이 사진 찍어주면 5만 원'],
         ['me','ㅇㅋ 고화질로 보내드림'],['them','사진이랑 계좌 같이 보냏'],['me','ㅇㅋ']]},
-      {n:'매니저님',t:'어제',u:1,msgs:[
+      {n:'{매니저}',t:'어제',u:1,msgs:[
         ['sep','2026년 10월 17일 토요일 18:20'],['them','내일 촬영 일정 변동 없습니다.'],['me','넵 확인했습니다'],
         ['them','장소는 따로 공유드릴게요 😊']]},
       {n:'엄마',t:'금요일',msgs:[
         ['sep','2026년 10월 16일 금요일 20:41'],['them','밥은 먹었니?'],['me','응 먹었어 걱정 마'],['them','추워지니까 옷 따뜻하게 입고 다녀']]},
-      {n:'재현이 형',pin:1,t:'4월 2일',msgs:[
+      {n:'{재현}',pin:1,t:'4월 2일',msgs:[
         ['sep','2026년 4월 2일 금요일 17:30'],['them','너 술 먹고 형한테 좋아한다고 한 거 기억나?'],['me','아 뭐요'],['them','형 왕가슴이라 좋다며'],['me','아 그런 말 좀 하지 말라고요']]},
       {n:'택배',t:'2025.12.30',msgs:[
         ['sep','2025년 12월 30일 10:18'],['them','[Web발신]\n[택배] 고객님의 상품이 배송 완료되었습니다.\n문 앞에 놓아두었습니다.']]},
       {n:'+82 1577-0001',t:'2025.12.31',msgs:[
         ['sep','2025년 12월 31일 14:02'],['them','[Web발신]\n[인증번호 483920] 타인에게 알려주지 마세요.']]}]
   }
-  ,notify:[              // ── 시간차로 오는 알림 (잠금을 푼 뒤 몇 초 후에 올지) ──
-    // type:'sms'(문자) / 'kakao'(카톡) / 'call'(전화)   at=잠금 푼 뒤 몇 초 후   from=보낸 사람 이름
+  ,notify:[              // ── 시간차로 오는 알림 (폰이 열린 뒤 몇 초 후에 올지) ──
+    // type:'sms'(문자) / 'kakao'(카톡) / 'call'(전화)   at=폰이 열린 뒤 몇 초 후 (맨 위 notifyStart 가 'unlock' 이면 비밀번호를 푼 뒤)   from=보낸 사람 이름
+    // 잠금화면에 있을 때 온 알림은 시계 아래에 쌓이고, 푼 뒤에는 위에서 배너로 떠요. 화면 맨 위에서 아래로 쓸어내리면 지금까지 온 알림이 알림 센터에 보여요.
     // 이름이 이미 있는 대화방과 같으면 그 대화에 이어서 붙고, 없으면 새 대화방이 생겨요.
     // call 은 lines=받았을 때 나오는 대사, ring=안 받으면 몇 초 뒤 부재중이 되는지(기본 25초)
     //   decline = 전화를 끊었을 때(거절 버튼) 오는 연락 → {type:'kakao'|'sms', delay:끊은 뒤 몇 초 후, text:['메시지1','메시지2'], gap:메시지 사이 간격(초)}
     //   miss    = 안 받고 놔뒀을 때(자동 부재중) 오는 연락 (decline 과 같은 모양)
-    {at:15,type:'kakao',from:'재현이 형',text:'형 퇴근했어'},
-    {at:30,type:'call',from:'재현이 형',lines:['여보세요?','형 5분 뒤 도착','응 준비해서 내려와'],
+    {at:15,type:'kakao',from:'{재현}',text:'형 퇴근했어'},
+    {at:30,type:'call',from:'{재현}',lines:['여보세요?','형 5분 뒤 도착','응 준비해서 내려와'],
      decline:{type:'kakao',delay:3,text:['야 왜 끊어','전화 좀 받아 ㅋㅋ']},
      miss:{type:'kakao',delay:4,text:['안 받네…','이따 다시 전화할게']}}]
+  ,oldNotify:[           // ── 폰을 열기 전에 이미 와 있던 알림 (잠금화면과 알림 센터에 처음부터 쌓여 있어요) ──
+    // type:'kakao'(카톡) / 'sms'(문자) / 'call'(부재중 전화)   from=보낸 사람 이름   text=알림에 보이는 내용
+    // ago = 얼마 전에 왔는지: 숫자는 분 단위(4 → 4분 전, 130 → 2시간 전, 시간이 지나면 자동으로 늘어나요) / '어제', '어제 오후 9:20' 처럼 글자로 적으면 그대로 보여요
+    // 목록은 최근 것이 위로 와요. 알림을 누르면 그 대화방(전화는 최근 통화)으로 가고, 그 대화를 열어 읽으면 알림도 사라져요.
+    // add:true 를 더하면 그 메시지도 대화 내용에 실제로 넣고 안 읽음(배지)으로 만들어요. 없는 이름이면 새 대화방이 만들어지면서 자동으로 들어가요.
+    {type:'kakao',from:'{창민}',text:'형 어디예요?',ago:4},
+    {type:'sms',from:'{매니저}',text:'내일 촬영 일정 변동 없습니다.',ago:42},
+    {type:'call',from:'{영훈}',text:'부재중 전화',ago:130},
+    {type:'sms',from:'엄마',text:'밥 챙겨 먹어~',ago:'어제'}]
   ,ig:{                  // ── 인스타그램 내용 (여기만 고치면 됩니다) ──
     // me = 내 계정 (e 를 안 적으면 카톡 내 프로필 사진을 써요)
     me:{id:'sunwoo',name:'{이름}',cat:'래퍼',bio:'소개글을 적어요\ncontact : my@mail.com',loc:'📍 Seoul, Korea',e:'',followers:'1.2만',following:123},
@@ -736,11 +782,11 @@ const CFG={
     // users = 눌러서 들어갈 수 있는 다른 사람 프로필 (키 = 인스타 아이디)
     //   follow:0 이면 처음부터 팔로우 안 한 상태 / call = 이 사람을 팔로우 취소하면 delay(초) 뒤에 from(연락처 이름)에게서 전화가 와요
     //   call.lines = 받았을 때 나오는 대사 (한 줄씩) / 다시 팔로우하면 전화가 취소돼요
-    users:{
+    users:{      // name = 인스타에 보이는 이름 (나이와 상관없이 여기 적은 그대로 보여요)
       'leejaehyunow':{name:'이재현',e:'',followers:'15.9만',following:83,bio:'너구리',
-        call:{from:'재현이 형',delay:10,lines:['{이름아}','실수지?','형 운전하다가 놀랐잖아','엉 아냐 실수면 다행이고']}},
+        call:{from:'{재현}',delay:10,lines:['{이름아}','실수지?','형 운전하다가 놀랐잖아','엉 아냐 실수면 다행이고']}},
       '_0hoony':{name:'김영훈',e:'',cat:'모델',followers:'10.1만',following:247,bio:'contact : 0hoony_0@mail.com',loc:'📍 Seoul, Korea',
-        call:{from:'영훈이 형',delay:20,lines:['여보세요?','{이름아}','이재현이랑 사진 올려도 뭐라고 안 하잖아','다시 걸어 ㅎㅎ']}}},
+        call:{from:'{영훈}',delay:20,lines:['여보세요?','{이름아}','{재현}이랑 사진 올려도 뭐라고 안 하잖아','다시 걸어 ㅎㅎ']}}},
     // posts = 모든 게시물 (맨 위가 가장 최신)
     //   u=올린 사람 아이디, e=사진 파일, c=내용, l=좋아요 수, n=댓글 수, d=날짜, cm=보이는 댓글 [['아이디','내용']]
     //   feed:1 = 홈 화면에 보임 / liked:1 = 처음부터 내가 좋아요를 누른 상태(좋아요 수 l 에 이미 포함)
@@ -813,11 +859,11 @@ $('#grid').innerHTML=CFG.apps.map(icon).join('');$('#dock').innerHTML=CFG.dock.m
 
 const buzz=n=>navigator.vibrate&&navigator.vibrate(n);
 function openPass(){if(!phone.classList.contains('home'))phone.classList.add('pass')}
-function closePass(){phone.classList.remove('pass');setPin('')}
+function closePass(){phone.classList.remove('pass');lockPend=null;setPin('')}
 function setPin(v){pin=v;document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i<pin.length));$('#cancel').textContent=pin?'삭제':'취소'}
 function press(n){if(busy||pin.length>=4)return;buzz(8);setPin(pin+n);$('#err').textContent='';if(pin.length===4){busy=true;setTimeout(check,180)}}
 function check(){
-  if(pin===CFG.pin){phone.classList.remove('pass');phone.classList.add('home');startTimeline();setTimeout(()=>{setPin('');busy=false},450)}
+  if(pin===CFG.pin){phone.classList.remove('pass');phone.classList.add('home');startTimeline();if(lockPend){const f=lockPend;lockPend=null;setTimeout(f,650)}setTimeout(()=>{setPin('');busy=false},450)}
   else{const d=$('#dots');d.classList.add('shake');$('#err').textContent='암호가 올바르지 않습니다. 다시 입력하세요.';buzz(120);
     setTimeout(()=>{d.classList.remove('shake');setPin('');busy=false},460)}}
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.id);toast.id=setTimeout(()=>e.classList.remove('show'),1800)}
@@ -1059,6 +1105,7 @@ function tEnd(){const c=tCall;if(!c||c.st==='end')return;
 function tAfter(it,r){if(!r)return;const type=r.type||'kakao',from=r.from||it.from,d=(r.delay==null?3:r.delay)*1000,g=(r.gap||2)*1000;
   [].concat(r.text||[]).forEach((x,i)=>nTm.push(setTimeout(()=>tlDeliver({type,from,text:x}),d+i*g)))}
 function tDecline(auto){const c=tCall;if(!c||c.st!=='in')return;tTm.forEach(clearTimeout);tTm=[];TR.unshift({n:c.name,k:'miss',t:tNow()});tClose();
+  if(auto)nPost({app:'전화',from:c.name,text:'부재중 전화',open:()=>openApp('전화')});     // 안 받고 놔두면 부재중 알림이 남아요
   if(c.it)tAfter(c.it,auto?c.it.miss:c.it.decline)}
 function tReset(){clearInterval(tIv);tTm.forEach(clearTimeout);tTm=[];tCall=null;tDial='';const e=$('#tcall');if(e)e.classList.remove('on')}
 $('#pp').innerHTML='<div class="tmain" id="tmain"></div>';
@@ -1100,7 +1147,39 @@ function nNext(){if(!nBusy&&!tCall&&nQ.length)nShow(nQ.shift())}
 function nFlush(){setTimeout(nNext,800)}
 (()=>{const e=$('#nb');let y0=null;
   e.addEventListener('pointerdown',ev=>{y0=ev.clientY});
-  e.addEventListener('pointerup',ev=>{const dy=ev.clientY-y0;y0=null;if(dy<-25){hideBanner();return}const n=e._n;if(n){hideBanner();n.open()}})})();
+  e.addEventListener('pointerup',ev=>{const dy=ev.clientY-y0;y0=null;if(dy<-25){hideBanner();return}const n=e._n;if(n){hideBanner();nDrop(n);n.open()}})})();
+/* ===== 알림 목록: 잠금화면에 쌓이고, 화면을 위에서 아래로 쓸어내리면 알림 센터가 열려요 ===== */
+const NLOG=[];let lockPend=null,ncLight=true;
+const locked=()=>!phone.classList.contains('home');
+const ago=ts=>{const x=Math.floor((Date.now()-ts)/1000);return x<60?'지금':x<3600?`${Math.floor(x/60)}분 전`:x<86400?`${Math.floor(x/3600)}시간 전`:x<172800?'어제':`${Math.floor(x/86400)}일 전`};
+const nLive=()=>{for(let i=NLOG.length-1;i>=0;i--){const r=NLOG[i].ref;if(r&&!(r.u>0))NLOG.splice(i,1)}return NLOG};     // 그 대화를 열어서 읽으면 알림도 사라져요
+const nCard=(n,src,i)=>{const [,k,bg]=APPMAP[n.app];return `<button class="ncd" data-nc="${src}" data-i="${i}"><span class="ic2" style="background:${bg}">${ICONS[k]||''}</span><span class="tx"><b>${kesc(n.from)}</b><p>${kesc(n.text)}</p></span><small>${kesc(n.label||ago(n.ts))}</small></button>`};
+const ncOn=()=>$('#nc').classList.contains('on');
+function lockRender(){const el=$('#lnl');if(!el)return;const L=nLive(),max=Math.max(1,Math.min(4,Math.floor(((phone.clientHeight||800)-246-190)/82))),show=L.slice(0,max);
+  el.innerHTML=show.map((n,i)=>nCard(n,'lk',i)).join('')+(L.length>show.length?`<span class="lnmore">알림 ${L.length-show.length}개 더 보기</span>`:'')}
+function ncRender(){const L=nLive();
+  $('#nc').innerHTML=`<div class="nct">${kesc($('#time').textContent)}</div><div class="ncdt">${kesc($('#date').textContent)}</div><div class="nch"><span>알림 센터</span>${L.length?'<button class="ncx" data-nc="clear" aria-label="모두 지우기">✕</button>':''}</div><div class="ncl">${L.length?L.map((n,i)=>nCard(n,'nc',i)).join(''):'<div class="nce">알림 없음</div>'}</div><div class="ncc"></div><button class="cbar" data-nc="close" aria-label="닫기"></button>`}
+function nPost(n){n.ts=Date.now();NLOG.unshift(n);
+  if(locked()){lockRender();return}                 // 잠금화면: 배너 대신 잠금화면에 쌓임
+  nShow(n);if(ncOn())ncRender()}
+function nDrop(n){const i=NLOG.indexOf(n);if(i>=0)NLOG.splice(i,1);if(locked())lockRender();else if(ncOn())ncRender()}
+function openNC(){if(locked()||tCall||ncOn())return;ncLight=phone.classList.contains('light');phone.classList.remove('light');phone.classList.add('ncopen');ncRender();$('#nc').classList.add('on')}
+function closeNC(){$('#nc').classList.remove('on');phone.classList.remove('ncopen');phone.classList.toggle('light',ncLight)}
+$('#nc').addEventListener('click',e=>{const b=e.target.closest('[data-nc]');if(!b)return;const a=b.dataset.nc;
+  if(a==='close')closeNC();
+  else if(a==='clear'){NLOG.length=0;ncRender()}
+  else if(a==='nc'){const n=nLive()[+b.dataset.i];if(!n)return;nDrop(n);closeNC();n.open()}});
+$('#lnl').addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('[data-nc]');if(!b)return;const n=nLive()[+b.dataset.i];if(!n)return;
+  lockPend=()=>{nDrop(n);n.open()};openPass()});     // 잠금화면 알림을 누르면 비밀번호를 풀고 그 대화로 가요
+(()=>{const z=$('#nchit');let y0=null;                 // 맨 위에서 아래로 쓸어내리기 → 알림 센터
+  z.addEventListener('pointerdown',e=>{y0=e.clientY;try{z.setPointerCapture(e.pointerId)}catch(_){}});
+  z.addEventListener('pointermove',e=>{if(y0!=null&&e.clientY-y0>50){y0=null;openNC()}});
+  z.addEventListener('pointerup',()=>{y0=null});z.addEventListener('pointercancel',()=>{y0=null});
+  const nc=$('#nc');let y1=null;                      // 아래에서 위로 쓸어올리기 → 닫기
+  nc.addEventListener('pointerdown',e=>{y1=e.target.closest&&e.target.closest('.ncc')?e.clientY:null});
+  nc.addEventListener('pointermove',e=>{if(y1!=null&&y1-e.clientY>50){y1=null;closeNC()}});
+  nc.addEventListener('pointerup',()=>{y1=null})})();
+setInterval(()=>{if(locked()&&NLOG.length)lockRender();else if(ncOn())ncRender()},30000);
 /* ===== 문자(아이메시지) ===== */
 const SM=CFG.sms;let msIdx=null;
 const mAv=(n,z,e)=>tAv(n,z,e).replace('class="pav"','class="pav mb"');
@@ -1135,12 +1214,34 @@ function tlDeliver(it){
     th.msgs.push(['them',it.text]);th.p=it.text;th.t=tNow();
     if(view){msRender();return}
     th.u=(th.u||0)+1;if(appOn('#ms')&&msIdx==null)msRender();
-    nShow({app:'문자',from:it.from,text:it.text,open:()=>msOpenThread(SM.threads.indexOf(th))});return}
+    nPost({app:'문자',from:it.from,text:it.text,ref:th,open:()=>msOpenThread(SM.threads.indexOf(th))});return}
   if(it.type==='kakao'){
     let i=K.chats.findIndex(c=>c.n===it.from);if(i<0){K.chats.push({n:it.from,p:'',t:'',u:0,msgs:[]});i=K.chats.length-1}
     const c=K.chats[i],view=appOn('#kk')&&kRoom===i;
     kPush(c,'them',it.text);
-    if(!view)nShow({app:'카카오톡',from:it.from,text:it.text,open:()=>kOpenChat(K.chats.indexOf(c))})}}
+    if(!view)nPost({app:'카카오톡',from:it.from,text:it.text,ref:c,open:()=>kOpenChat(K.chats.indexOf(c))})}}
+/* ===== 폰을 열기 전에 이미 와 있던 알림 쌓기 ===== */
+function seedOld(){
+  const list=(CFG.oldNotify||[]).map((it,i)=>({it,k:typeof it.ago==='number'?it.ago:1e6+i})).sort((a,b)=>a.k-b.k).map(x=>x.it),out=[];
+  list.forEach(it=>{
+    const min=typeof it.ago==='number'?it.ago:0,label=typeof it.ago==='string'?it.ago:'',d=new Date(now()-min*60000);
+    const t24=d.toLocaleTimeString('ko-KR',{...TZ,hour:'2-digit',minute:'2-digit',hour12:false}),t12=d.toLocaleTimeString('ko-KR',{...TZ,hour:'numeric',minute:'2-digit',hour12:true});
+    const n={from:it.from,text:it.text||'',ts:Date.now()-min*60000,label};
+    if(it.type==='sms'){
+      let i=SM.threads.findIndex(t=>t.n===it.from),fresh=false;if(i<0){SM.threads.push({n:it.from,msgs:[]});i=SM.threads.length-1;fresh=true}
+      const th=SM.threads[i];
+      if(it.add||fresh){th.msgs.push(['them',n.text]);th.p=n.text;th.t=label||t24;th.u=(th.u||0)+1}
+      Object.assign(n,{app:'문자',ref:th.u>0?th:undefined,open:()=>msOpenThread(SM.threads.indexOf(th))})}
+    else if(it.type==='call'){
+      n.text=n.text||'부재중 전화';if(it.add)TR.unshift({n:it.from,k:'miss',t:label||t24});
+      Object.assign(n,{app:'전화',open:()=>openApp('전화')})}
+    else{
+      let i=K.chats.findIndex(c=>c.n===it.from),fresh=false;if(i<0){K.chats.push({n:it.from,p:'',t:'',u:0,msgs:[]});i=K.chats.length-1;fresh=true}
+      const c=K.chats[i];
+      if(it.add||fresh){c.msgs.push(['them',n.text,t12]);c.p=n.text;c.t=label||t12;c.u=(c.u||0)+1}
+      Object.assign(n,{app:'카카오톡',ref:c.u>0?c:undefined,open:()=>kOpenChat(K.chats.indexOf(c))})}
+    out.push(n)});
+  NLOG.push(...out)}
 function startTimeline(){if(nStarted)return;nStarted=true;(CFG.notify||[]).forEach(it=>nTm.push(setTimeout(()=>tlDeliver(it),(it.at||0)*1000)))}
 /* ===== 인스타그램 (아이폰 스타일) ===== */
 const IG=CFG.ig;let igBase='home',igH=[],igSheet=null,igLast=0,igLastEl=null;const igSv={};
@@ -1304,6 +1405,9 @@ $('#nt').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(!b
   else if(a==='x')toast('아직 준비 중이에요')});
 document.addEventListener('keydown',e=>{
   const c=phone.classList;
+  if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;      // 이름·나이 칸, 카톡·DM 입력칸에 치는 글자는 여기서 처리하지 않아요
+  if($('#who').classList.contains('on'))return;
+  if(c.contains('ncopen')){if(e.key==='Escape')closeNC();return}
   if(c.contains('app')){
     if(pvIdx!=null){if(e.key==='Escape')pClose();else if(e.key==='ArrowLeft')pStep(-1);else if(e.key==='ArrowRight')pStep(1);return}
     if(e.key==='Escape'){if(kRoom!=null){kRoom=null;kRender()}else if(pAlbum!=null){pAlbum=null;pRender()}else closeApp()}return}
@@ -1316,7 +1420,11 @@ const jong=n=>{const c=String(n||'').trim().slice(-1).charCodeAt(0)-0xAC00;retur
 const NJ={'아':['아','야'],'이':['이','가'],'은':['은','는'],'을':['을','를'],'과':['과','와'],'이랑':['이랑','랑']};
 let VNAME=CFG.defaultName||'',VAGE=+CFG.defaultAge||24,VGROUP='',VCALL='{이름}';
 const fillRaw=t=>String(t).replace(/\{이름(아|이|은|을|과|이랑)?\}/g,(m,j)=>j?VNAME+NJ[j][jong(VNAME)>0?0:1]:VNAME);
-const fillName=t=>fillRaw(String(t).replace(/\{호칭\}/g,VCALL).replace(/\{나이\}/g,VAGE));
+const JP={'이':['이','가'],'가':['이','가'],'은':['은','는'],'는':['은','는'],'을':['을','를'],'를':['을','를'],'과':['과','와'],'와':['과','와'],'아':['아','야'],'야':['아','야'],'이랑':['이랑','랑'],'랑':['이랑','랑']};
+const pname=k=>{const o=(CFG.people||{})[k];if(o==null)return null;if(typeof o==='string')return o;const v=o[VGROUP]!=null?o[VGROUP]:(o['기본']!=null?o['기본']:o['동갑']);return v!=null?v:Object.values(o)[0]};
+/* {재현} {영훈} … → 나이 구간에 맞는 이름. 바로 뒤에 붙은 이/가·은/는·을/를·와/과·랑·아/야 는 바뀐 이름의 받침에 맞춰 고쳐요 */
+const fillPeople=t=>String(t).replace(/\{([^{}]+)\}(?:(이랑|랑|이|가|은|는|을|를|과|와|아|야)(?![가-힣]))?/g,(m,k,j)=>{const n=pname(k);if(n==null)return m;return j?n+JP[j][jong(n)>0?0:1]:n});
+const fillName=t=>fillPeople(fillRaw(String(t).replace(/\{호칭\}/g,VCALL).replace(/\{나이\}/g,VAGE)));
 const AGS=CFG.ageGroups||[],AGN=new Set(AGS.map(g=>g.n).concat('기본'));
 function groupOf(age){if(!AGS.length)return null;
   const f=AGS.find(g=>age>=(g.min==null?0:g.min)&&age<=(g.max==null?999:g.max));if(f)return f;
@@ -1337,7 +1445,9 @@ function applyWho(n,a){
   personalize(CFG);personalize(TR);                       // 설정과 최근 통화 목록 안의 {이름}·{호칭}·나이별 대사를 한 번에 바꿈
   document.title=fillName(CFG.title||'iPhone');
   try{sessionStorage.setItem('phone-name',VNAME);sessionStorage.setItem('phone-age',String(age))}catch(e){}
-  $('#who').classList.remove('on')}
+  $('#who').classList.remove('on');
+  try{setPin('')}catch(e){}phone.classList.remove('pass');      // 입력 중에 눌린 글자가 비밀번호로 남지 않게 비움
+  seedOld();lockRender();if((CFG.notifyStart||'open')==='open')startTimeline()}
 (function(){
   let q=null,qa=null,sv=null,sa=null;
   try{const u=new URLSearchParams(location.search);q=u.get('name');qa=u.get('age')}catch(e){}
